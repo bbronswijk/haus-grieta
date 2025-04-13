@@ -1,4 +1,3 @@
-import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -13,6 +12,7 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -90,5 +90,12 @@ export const plugins: Plugin[] = [
       },
     },
   }),
-  payloadCloudPlugin(),
+  vercelBlobStorage({
+    enabled: true, // Optional, defaults to true
+    collections: {
+      media: true,
+    },
+    // Token provided by Vercel once Blob storage is added to your Vercel project
+    token: process.env.BLOB_READ_WRITE_TOKEN,
+  }),
 ]
