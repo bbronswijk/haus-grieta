@@ -31,29 +31,16 @@ const getPagesSitemap = unstable_cache(
 
     const dateFallback = new Date().toISOString()
 
-    const defaultSitemap = [
-      {
-        loc: `${SITE_URL}/search`,
-        lastmod: dateFallback,
-      },
-      {
-        loc: `${SITE_URL}/posts`,
-        lastmod: dateFallback,
-      },
-    ]
-
-    const sitemap = results.docs
+    return results.docs
       ? results.docs
-          .filter((page) => Boolean(page?.slug))
+          .filter((page) => Boolean(page?.id))
           .map((page) => {
             return {
-              loc: page?.slug === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page?.slug}`,
+              loc: page?.id === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page?.id}`,
               lastmod: page.updatedAt || dateFallback,
             }
           })
       : []
-
-    return [...defaultSitemap, ...sitemap]
   },
   ['pages-sitemap'],
   {
